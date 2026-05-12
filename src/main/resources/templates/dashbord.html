@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Dashboard — Learnweb</title>
+  <link rel="stylesheet" href="/style.css"/>
+</head>
+<body>
+
+<nav>
+  <a href="/" class="nav-brand">Learnweb</a>
+  <div class="nav-links">
+    <a href="/courses">Courses</a>
+    <a href="/dashboard">Dashboard</a>
+    <a href="/api/auth/logout">Sign Out</a>
+  </div>
+</nav>
+
+<div class="dash-wrap">
+  <h1 th:text="'Hello, ' + ${user.name}">Hello</h1>
+  <p class="sub">Your enrolled courses</p>
+
+  <div th:if="${#lists.isEmpty(enrollments)}" class="empty">
+    <p>You haven't enrolled in any course yet.</p>
+    <a href="/courses" class="btn btn-primary" style="margin-top:12px;display:inline-block;">Browse Courses</a>
+  </div>
+
+  <div th:each="e : ${enrollments}" class="enroll-item">
+    <div>
+      <h3 th:text="${e.course.title}">Course</h3>
+      <p th:text="${e.course.description}">Desc</p>
+      <div style="display:flex;align-items:center;gap:8px;">
+        <div class="progress-bar" style="width:160px;margin:0;">
+          <div class="progress-fill" th:style="'width:' + ${e.progress} + '%'"></div>
+        </div>
+        <span style="font-size:0.8rem;color:#888;" th:text="${e.progress} + '%'">0%</span>
+      </div>
+    </div>
+    <a th:href="@{/course/{id}(id=${e.course.id})}" class="btn btn-primary btn-sm">Continue</a>
+  </div>
+</div>
+
+<footer>
+  <span>Learnweb</span><span>© 2026</span>
+</footer>
+</body>
+</html>

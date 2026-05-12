@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Admin — Learnweb</title>
+  <link rel="stylesheet" href="/style.css"/>
+</head>
+<body>
+
+<nav>
+  <a href="/" class="nav-brand">Learnweb</a>
+  <div class="nav-links">
+    <a href="/courses">Courses</a>
+    <a href="/dashboard">Dashboard</a>
+    <a href="/api/auth/logout">Sign Out</a>
+  </div>
+</nav>
+
+<div class="admin-wrap">
+
+  <!-- SIDEBAR -->
+  <div class="admin-sidebar">
+    <div class="sidebar-link active" onclick="show('overview', this)">Overview</div>
+    <div class="sidebar-link" onclick="show('courses', this)">Courses</div>
+    <div class="sidebar-link" onclick="show('lessons', this)">Lessons</div>
+    <div class="sidebar-link" onclick="show('enrollments', this)">Enrollments</div>
+  </div>
+
+  <!-- CONTENT -->
+  <div class="admin-content">
+
+    <!-- OVERVIEW -->
+    <div id="pane-overview" class="tab-pane active">
+      <h1>Overview</h1>
+      <div class="stats-row">
+        <div class="stat-box"><div class="stat-box-label">Courses</div><div class="stat-box-num" th:text="${courseCount}">0</div></div>
+        <div class="stat-box"><div class="stat-box-label">Lessons</div><div class="stat-box-num" th:text="${lessonCount}">0</div></div>
+        <div class="stat-box"><div class="stat-box-label">Users</div><div class="stat-box-num" th:text="${userCount}">0</div></div>
+        <div class="stat-box"><div class="stat-box-label">Enrollments</div><div class="stat-box-num" th:text="${enrollmentCount}">0</div></div>
+      </div>
+    </div>
+
+    <!-- COURSES -->
+    <div id="pane-courses" class="tab-pane">
+      <h1>Courses</h1>
+      <div class="add-box">
+        <h2>Add Course</h2>
+        <form action="/api/courses" method="post">
+          <div class="form-row">
+            <div class="form-group">
+              <label>Title</label>
+              <input type="text" name="title" placeholder="Course title" required/>
+            </div>
+            <div class="form-group">
+              <label>Description</label>
+              <input type="text" name="description" placeholder="Short description" required/>
+            </div>
+          </div>
+          <button type="submit" class="btn btn-primary">Add</button>
+        </form>
+      </div>
+      <div class="table-box">
+        <div class="table-box-title">All Courses</div>
+        <table>
+          <thead><tr><th>ID</th><th>Title</th><th>Description</th><th></th></tr></thead>
+          <tbody>
+            <tr th:each="c : ${courses}">
+              <td th:text="${c.id}"></td>
+              <td th:text="${c.title}"></td>
+              <td th:text="${c.description}" style="color:#888"></td>
+              <td><a th:href="@{/course/{id}(id=${c.id})}" class="btn btn-outline btn-sm">View</a></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- LESSONS -->
+    <div id="pane-lessons" class="tab-pane">
+      <h1>Lessons</h1>
+      <div class="add-box">
+        <h2>Add Lesson</h2>
+        <form action="/add-lesson" method="post">
+          <div class="form-row">
+            <div class="form-group">
+              <label>Lesson Title</label>
+              <input type="text" name="title" placeholder="Lesson title" required/>
+            </div>
+            <div class="form-group">
+              <label>Course</label>
+              <select name="courseId" required>
+                <option value="">Select course</option>
+                <option th:each="c : ${courses}" th:value="${c.id}" th:text="${c.title}"></option>
+              </select>
+            </div>
+          </div>
+          <div class="form-group" style="margin-top:10px;">
+            <label>Content</label>
+            <textarea name="content" placeholder="Lesson content" required></textarea>
+          </div>
+          <button type="submit" class="btn btn-primary">Add</button>
+        </form>
+      </div>
+      <div class="table-box">
+        <div class="table-box-title">All Lessons</div>
+        <table>
+          <thead><tr><th>ID</th><th>Title</th><th>Course</th></tr></thead>
+          <tbody>
+            <tr th:each="l : ${lessons}">
+              <td th:text="${l.id}"></td>
+              <td th:text="${l.title}"></td>
+              <td th:text="${l.course.title}" style="color:#888"></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- ENROLLMENTS -->
+    <div id="pane-enrollments" class="tab-pane">
+      <h1>Enrollments</h1>
+      <div class="table-box">
+        <div class="table-box-title">All Enrollments</div>
+        <table>
+          <thead><tr><th>User</th><th>Email</th><th>Course</th><th>Progress</th></tr></thead>
+          <tbody>
+            <tr th:each="e : ${enrollments}">
+              <td th:text="${e.user.name}"></td>
+              <td th:text="${e.user.email}" style="color:#888"></td>
+              <td th:text="${e.course.title}"></td>
+              <td>
+                <div style="display:flex;align-items:center;gap:8px;">
+                  <div class="progress-bar" style="width:80px;margin:0;">
+                    <div class="progress-fill" th:style="'width:' + ${e.progress} + '%'"></div>
+                  </div>
+                  <span style="font-size:0.8rem;color:#888;" th:text="${e.progress} + '%'"></span>
+                </div>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<script>
+  function show(id, el) {
+    document.querySelectorAll('.tab-pane').forEach(p => p.classList.remove('active'));
+    document.querySelectorAll('.sidebar-link').forEach(l => l.classList.remove('active'));
+    document.getElementById('pane-' + id).classList.add('active');
+    el.classList.add('active');
+  }
+</script>
+
+</body>
+</html>
