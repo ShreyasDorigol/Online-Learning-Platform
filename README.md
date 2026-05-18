@@ -2,7 +2,7 @@
 
 ## Overview
 
-The Online Learning Platform is a full-stack web application built using Java, Spring Boot, Thymeleaf, Maven, and H2/MySQL database. The platform allows users to browse courses, enroll in courses, track lesson progress, and manage learning activities through an interactive interface.
+The Online Learning Platform is a full-stack web application built using Java, Spring Boot, Thymeleaf, Maven, and H2. The platform allows users to browse courses, enroll in courses, track lesson progress, and manage learning activities through an interactive interface.
 
 This project demonstrates backend development, frontend integration, MVC architecture, database handling, and RESTful application design.
 
@@ -37,14 +37,12 @@ This project demonstrates backend development, frontend integration, MVC archite
 - Maven
 
 ### Frontend
-- HTML5
-- CSS3
+- HTML
+- CSS
 - Thymeleaf
-- Bootstrap
 
 ### Database
 - H2 Database
-- MySQL (Optional)
 
 ### Tools & Platforms
 - VS Code
@@ -212,14 +210,12 @@ git push -u origin main
 
 ## Future Enhancements
 
-- JWT Authentication
 - Role-based authorization
 - Video lesson support
 - Payment integration
 - Certificate generation
 - Docker deployment
 - Cloud hosting
-- Unit and integration testing
 
 ---
 
@@ -238,7 +234,7 @@ Add screenshots of:
 
 **Shreyas Dorigol**
 
-GitHub: https://github.com/
+GitHub: https://github.com/ShreyasDorigol
 
 ---
 
